@@ -166,12 +166,13 @@ jobs:
           echo "Running: node dist/cli.js ${ARGS[@]}"
           node dist/cli.js "${ARGS[@]}"
 
-      - name: Build App (Windows)
+      - name: Build App (Windows - Non Admin User Setup)
         if: runner.os == 'Windows'
         timeout-minutes: 25
         shell: pwsh
         run: |
-          $args = "${{ inputs.url }}", "--name", "${{ inputs.name }}", "--identifier", "${{ inputs.identifier }}"
+          # Appending "--targets", "nsis" tells Pake to make a standard user-space executable instead of a machine-wide MSI
+          $args = "${{ inputs.url }}", "--name", "${{ inputs.name }}", "--identifier", "${{ inputs.identifier }}", "--targets", "nsis"
 
           if ("${{ inputs.icon }}" -ne "") {
             $args += "--icon", "${{ inputs.icon }}"
@@ -258,12 +259,12 @@ jobs:
           retention-days: 3
           if-no-files-found: ignore
 
-      - name: Upload MSI (Windows)
+      - name: Upload Non-Admin EXE (Windows)
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v6
         with:
           name: ${{ inputs.name }}-Windows
-          path: ${{ inputs.name }}.msi
+          path: "*.exe"
           retention-days: 3
 
       - name: Rust cache store
