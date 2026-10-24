@@ -1,4 +1,4 @@
-name: Build App With Pake CLI
+name: Build App With Pake CLI Isolated
 
 env:
   NODE_VERSION: "22"
@@ -270,7 +270,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: ${{ inputs.name }}-Windows-Portable
-          path: ${{ inputs.name }}.exe
+          path: src-tauri/target/**/release/${{ inputs.name }}.exe
           retention-days: 3
           if-no-files-found: ignore
 
